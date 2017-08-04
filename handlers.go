@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gopkg.in/lxc/go-lxc.v2"
 	"net/http"
+	"os"
 	"strconv"
 	"syscall"
 	"time"
@@ -72,6 +73,18 @@ func HandleLxcStart(w http.ResponseWriter, r *http.Request) {
 	// get mount options
 	source := fmt.Sprintf("/dev/rbd%d", rbd)
 	target := fmt.Sprintf("/var/lib/lxc/%s", name)
+	// make sure mount target exists
+	if _, err := os.Stat(target); err != nil {
+		if !os.IsNotExist(err) {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		// create mount target directory
+		if err = os.MkdirAll(target, 0755); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
 	// mount container root loop
 MOUNT:
 	for {
