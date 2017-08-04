@@ -1,0 +1,11 @@
+[Unit]
+Description=CephXC controlls LXC containers installed on Ceph RBD storage
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/cephxc
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
