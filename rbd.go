@@ -6,9 +6,11 @@ import (
 	"strings"
 )
 
+/* devpath specifies path to devices interface for kernel rbd module */
+const devpath = "/sys/bus/rbd/devices"
+
 /* RbdMap instructs kernel rbd module to map a ceph device */
 func RbdMap(pool, name string) (int, error) {
-	devpath := "/sys/bus/rbd/devices"
 	// prepare kernel rbd command
 	rbdcmd := fmt.Sprintf("%s name=%s,secret=%s %s %s -",
 		strings.Join(config.MonHosts, ","),
