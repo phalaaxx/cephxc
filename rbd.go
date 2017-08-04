@@ -20,11 +20,11 @@ func RbdMap(pool, name string) (int, error) {
 	// get devices list
 	mapped := NewRbdList(devpath)
 	// map ceph rbd device
-	f, err := os.OpenFile("/sys/bus/rbd/add_single_major", os.O_WRONLY, 0644)
+	f, err := os.OpenFile("/sys/bus/rbd/add", os.O_WRONLY, 0644)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// try to open add file
-			f, err = os.OpenFile("/sys/bus/rbd/add", os.O_WRONLY, 0644)
+			// try to open add_single_major instead
+			f, err = os.OpenFile("/sys/bus/rbd/add_single_major", os.O_WRONLY, 0644)
 		}
 		if err != nil {
 			return -1, err
@@ -44,11 +44,11 @@ func RbdUnmap(rbd string) error {
 		return fmt.Errorf("Bad device name")
 	}
 	// attempt to openkernel module interface
-	f, err := os.OpenFile("/sys/bus/rbd/remove_single_major", os.O_WRONLY, 0644)
+	f, err := os.OpenFile("/sys/bus/rbd/remove", os.O_WRONLY, 0644)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// try to open remove
-			f, err = os.OpenFile("/sys/bus/rbd/remove", os.O_WRONLY, 0644)
+			// try to open remove_single_major instead
+			f, err = os.OpenFile("/sys/bus/rbd/remove_single_major", os.O_WRONLY, 0644)
 		}
 		if err != nil {
 			return err
